@@ -16,17 +16,21 @@
   <a href="https://github.com/xlzhen-940218/SimpleProtocolPlayer"><img src="https://img.shields.io/badge/GitHub-xlzhen--940218%2FSimpleProtocolPlayer-brightgreen" alt="Repo"></a>
 </p>
 
----
-
-## 📥 下载安装 / Download
-
-> **推荐下载方式**：请前往本仓库的 [**Releases 页面**](https://github.com/xlzhen-940218/SimpleProtocolPlayer/releases) 下载最新版本的 APK 安装包。
-> 
-> *Recommended: Download the latest APK from the [**Releases Page**](https://github.com/xlzhen-940218/SimpleProtocolPlayer/releases).*
+<p align="center">
+  <strong><a href="#-中文说明">🇨🇳 中文说明</a></strong> &nbsp;&nbsp;|&nbsp;&nbsp; <strong><a href="#-english-description">🌐 English Description</a></strong>
+</p>
 
 ---
 
-## 📱 界面预览 / Screenshot
+# 🇨🇳 中文说明
+
+## 📥 下载安装
+
+> **推荐下载方式**：请前往本仓库的 [**Releases 发布页面**](https://github.com/xlzhen-940218/SimpleProtocolPlayer/releases) 下载最新版本的 APK 安装包。
+
+---
+
+## 📱 界面预览
 
 <p align="center">
   <img src="docs/screenshot.png" alt="Simple Protocol Player 界面截图" width="400" />
@@ -34,7 +38,7 @@
 
 ---
 
-## ✨ 核心特性 / Key Features
+## ✨ 核心特性
 
 - 🔊 **无线扬声器模式（接收端）**：
   - 将 Linux / PC 电脑的声音以极低延迟无线串流至 Android 手机或平板播放。
@@ -44,7 +48,7 @@
 - 🔴 **实时音频录制（WAV 格式）**：
   - 支持在应用主界面或前台通知栏一键启动与停止录音。
   - 音频实时写入系统内部存储 `/Music/` 目录（`内部存储/Music/SPP_Record_*.wav`），保存为无损 16-bit PCM WAV 文件。
-  - 适配 Android 10+ Scoped Storage 与媒体库扫描，停止录音后即时 Toast 提示文件路径。
+  - 适配 Android 10+ Scoped Storage 与系统媒体库扫描，停止录音后即时 Toast 提示文件路径。
 - 🛡️ **常驻前台服务与通知栏控制**：
   - 遵循现代 Android 后台保活规范，杜绝应用退至后台被系统杀进程（解决 [Issue #39](https://github.com/kaytat/SimpleProtocolPlayer/issues/39)）。
   - 通知栏集成状态指示、串流启停以及实时录音控制开关。
@@ -59,7 +63,7 @@
 
 ---
 
-## 🚀 快速上手 / Quick Start
+## 🚀 快速上手
 
 ### 1. 查看 Linux 电脑 IP 地址
 
@@ -99,7 +103,7 @@ pactl load-module module-simple-protocol-tcp rate=44100 format=s16le channels=2 
 
 #### 方案 C：使用完毕后卸载模块
 
-在 Linux 终端中卸载模块以释放端口与资源：
+在 Linux 终端中卸载模块以释放端口与系统资源：
 
 ```bash
 pactl unload-module module-simple-protocol-tcp
@@ -130,7 +134,7 @@ context.modules = [
 
 ---
 
-## ⚙️ 参数建议 / Recommended Settings
+## ⚙️ 参数建议
 
 | 参数 | 默认值 | 推荐说明 |
 | :--- | :--- | :--- |
@@ -141,13 +145,13 @@ context.modules = [
 
 ---
 
-## 🛠️ 构建与编译 / Build from Source
+## 🛠️ 源码构建
 
 ### 环境要求
 
 - **JDK**：OpenJDK 17 或更高
 - **Android SDK**：Compile SDK 36 / Min SDK 26 (Android 8.0+)
-- **构建工具**：Gradle 8.13.2 / Android Gradle Plugin 8.13.2
+- **构建工具**：Gradle 8.x / 9.x，Android Gradle Plugin 8.x / 9.x
 
 ### 编译步骤
 
@@ -168,8 +172,167 @@ cd SimpleProtocolPlayer
 
 ---
 
-## 📄 开源许可证 / License
+## 📄 开源许可证
 
 本项目采用 [Apache License 2.0](LICENSE.txt) 许可证。
 
 - 原项目致谢：基于 [kaytat/SimpleProtocolPlayer](https://github.com/kaytat/SimpleProtocolPlayer) 深度重构与功能演进。
+
+---
+---
+
+# 🌐 English Description
+
+## 📥 Download & Installation
+
+> **Recommended**: Download the latest release APK from the [**GitHub Releases Page**](https://github.com/xlzhen-940218/SimpleProtocolPlayer/releases).
+
+---
+
+## 📱 UI Preview
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="Simple Protocol Player Screenshot" width="400" />
+</p>
+
+---
+
+## ✨ Key Features
+
+- 🔊 **Wireless Speaker Mode (Receiver)**:
+  - Streams audio from Linux / PC to your Android phone or tablet with minimal latency over Wi-Fi.
+  - Supports 44100Hz / 48000Hz stereo (default: 44100Hz Stereo) with tunable buffer sizes (20ms ~ 100ms) to balance latency and stability.
+- 🎙️ **Wireless Microphone Mode (Transmitter)**:
+  - Captures your Android device microphone audio and streams it to your Linux PC over TCP as a virtual microphone input (resolves [Issue #43](https://github.com/kaytat/SimpleProtocolPlayer/issues/43)).
+- 🔴 **Real-Time Lossless Audio Recording (WAV)**:
+  - Start and stop recording at any time from either the main UI or the ongoing notification.
+  - Records real-time 16-bit PCM lossless WAV directly to internal storage `/Music/` directory (`Internal Storage/Music/SPP_Record_*.wav`).
+  - Fully compatible with Android 10+ Scoped Storage and MediaStore indexing, with immediate Toast notifications indicating the saved file path.
+- 🛡️ **Foreground Service & Notification Bar Controls**:
+  - Compliant with modern Android background execution standards, preventing the system from killing the audio playback process (resolves [Issue #39](https://github.com/kaytat/SimpleProtocolPlayer/issues/39)).
+  - Ongoing notification offers status indicators, stream start/stop toggle, and recording controls.
+- ⚡ **Modern Material 3 Interface & Anti-Spam Interaction**:
+  - Completely resolves rapid double-clicking issues on Play/Stop buttons that previously spawned excessive PulseAudio modules on Linux.
+  - Built-in latency preset chips for quick buffer switching (20ms Fast, 50ms Default, 100ms Stable).
+- 📋 **Integrated Linux Setup Guide with 1-Click Copy**:
+  - In-app interactive guide containing common PulseAudio / PipeWire commands plus a fast command to inspect the Linux machine IP (`hostname -I`).
+  - Supports 1-click clipboard copying for all commands.
+- 🌐 **Full 7-Language Localization**:
+  - Comprehensive multi-language support for Chinese, English, German, French, Spanish, Korean, and Japanese.
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Check Linux PC IP Address
+
+Run the following command in your Linux terminal to view your LAN IP address:
+
+```bash
+hostname -I
+```
+
+---
+
+### 2. Linux Configuration (PulseAudio / PipeWire)
+
+#### Option A: Speaker Mode (PC Audio -> Android Playback)
+
+Run the following command in your Linux terminal to load the PulseAudio module (default port is `12345`):
+
+```bash
+pactl load-module module-simple-protocol-tcp rate=44100 format=s16le channels=2 record=true port=12345
+```
+
+> 💡 **Next Steps**: Open the Android App, enter your Linux PC IP address and port `12345`, select "Speaker (Receiver)", and tap **Start Stream** to hear your PC audio.
+
+---
+
+#### Option B: Microphone Mode (Android Mic -> PC Audio Input)
+
+Run the following command in your Linux terminal to load the playback module:
+
+```bash
+pactl load-module module-simple-protocol-tcp rate=44100 format=s16le channels=2 record=false port=12345
+```
+
+> 💡 **Next Steps**: Open the Android App, select "Microphone (Transmitter)", and tap **Start Stream**. Your phone's microphone input will be streamed in real-time to your Linux PC.
+
+---
+
+#### Option C: Unload Module When Done
+
+Unload the module to release the port and system resources:
+
+```bash
+pactl unload-module module-simple-protocol-tcp
+```
+
+---
+
+#### Option D: PipeWire Persistent Configuration (Optional)
+
+If your system uses PipeWire, you can configure auto-loading by creating `/etc/pipewire/pipewire.conf.d/simple-protocol.conf`:
+
+```conf
+context.modules = [
+{   name = libpipewire-module-protocol-simple
+    args = {
+        capture = true
+        audio.rate = 44100
+        audio.format = S16LE
+        audio.channels = 2
+        audio.position = [ FL FR ]
+        server.address = [
+            "tcp:12345"
+        ]
+    }
+}
+]
+```
+
+---
+
+## ⚙️ Recommended Settings
+
+| Parameter | Default Value | Recommendation |
+| :--- | :--- | :--- |
+| **Sample Rate** | `44100 Hz` | Standard CD quality, optimal balance between fidelity and network bandwidth |
+| **Channels** | `Stereo` | Full dual-channel audio; switch to Mono if network bandwidth is heavily constrained |
+| **Buffer Size** | `50 ms` | Best balance between minimal latency and stutter-free playback; try 20ms for ultra-low latency |
+| **Port** | `12345` | Must match the `port` specified in the Linux `module-simple-protocol-tcp` command |
+
+---
+
+## 🛠️ Building from Source
+
+### Prerequisites
+
+- **JDK**: OpenJDK 17 or higher
+- **Android SDK**: Compile SDK 36 / Min SDK 26 (Android 8.0+)
+- **Build Tools**: Gradle 8.x / 9.x, Android Gradle Plugin 8.x / 9.x
+
+### Build Commands
+
+```bash
+# Clone the repository
+git clone https://github.com/xlzhen-940218/SimpleProtocolPlayer.git
+cd SimpleProtocolPlayer
+
+# Build Debug APK
+./gradlew assembleDebug
+
+# Build Release APK
+./gradlew assembleRelease
+```
+
+The compiled APK will be located at:
+`app/build/outputs/apk/debug/app-debug.apk`
+
+---
+
+## 📄 License & Attribution
+
+This project is licensed under the [Apache License 2.0](LICENSE.txt).
+
+- Credits: Heavily refactored and evolved from the original [kaytat/SimpleProtocolPlayer](https://github.com/kaytat/SimpleProtocolPlayer).
