@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">IP-Adresse / Hostname</string>
+    <string name="hintIpAddr">IP-Adresse / Hostname</string>
+    <string name="labelAudioPort">Audio-Port</string>
+    <string name="hintAudioPort">Audio-Port</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">Hinweise</string>
+    <string name="notice_title">Hinweise</string>
+    <string name="labelSampleRate">Abtastrate</string>
+    <string name="labelStereoMono">Mono/Stereo</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (Standard)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>Mono</item>
+        <item>Stereo (Standard)</item>
+    </string-array>
+    <string name="stereoKey">Stereo</string>
+    <string name="bufferSize">Puffergröße (in ms)</string>
+    <string name="bufferSizeHint">Puffergröße</string>
+    <string name="retry">Automatische Neuverbindung</string>
+    <string name="usePerformanceMode">Leistungsmodus (Niedrige Latenz)</string>
+    <string name="useMinBuffer">Minimaler AudioTrack-Puffer</string>
+    <string name="useMedia3">Media3 (Experimentell)</string>
+    <string name="error">Fehler</string>
+
+    <!-- Modusauswahl -->
+    <string name="mode_speaker">Lautsprecher (Empfänger)</string>
+    <string name="mode_mic">Mikrofon (Sender)</string>
+    <string name="mode_speaker_desc">Linux-Ton auf Android wiedergeben</string>
+    <string name="mode_mic_desc">Android-Mikrofon an Linux senden (Issue #43)</string>
+
+    <!-- Status -->
+    <string name="status_ready">Bereit zum Streamen</string>
+    <string name="status_connecting">Verbindung wird hergestellt…</string>
+    <string name="status_streaming_speaker">Streaming: Linux-Audio wird wiedergegeben</string>
+    <string name="status_streaming_mic">Streaming: Mikrofon wird an Linux gesendet</string>
+    <string name="status_stopped">Streaming gestoppt</string>
+    <string name="status_error">Verbindung fehlgeschlagen</string>
+    <string name="status_error_desc">Netzwerk, Linux-Server-IP und Port überprüfen.</string>
+
+    <!-- Schaltflächen -->
+    <string name="btn_start_stream">Streaming starten</string>
+    <string name="btn_stop_stream">Streaming stoppen</string>
+    <string name="btn_start_record">Aufnahme starten</string>
+    <string name="btn_stop_record">Aufnahme stoppen</string>
+    <string name="recording_active_badge">REC</string>
+
+    <!-- Abschnitte -->
+    <string name="section_connection">Verbindung</string>
+    <string name="section_audio_format">Audioformat</string>
+    <string name="section_advanced">Erweiterte Optionen</string>
+
+    <!-- Linux Einrichtung -->
+    <string name="linux_guide_item">Linux-Einrichtungsanleitung</string>
+    <string name="linux_guide_title">Linux-Einrichtungsanleitung</string>
+    <string name="linux_guide_desc">Führen Sie diese Befehle im Linux-Terminal aus, um PulseAudio oder PipeWire zu konfigurieren:</string>
+    <string name="linux_guide_ip_title">1. Linux-IP-Adresse anzeigen</string>
+    <string name="linux_guide_speaker_title">2. Lautsprechermodus (Android gibt PC-Ton wieder)</string>
+    <string name="linux_guide_mic_title">3. Mikrofonmodus (Android-Mikrofon an PC)</string>
+    <string name="linux_guide_unload_title">4. Modul entladen / stoppen</string>
+    <string name="copied_to_clipboard">Befehl in die Zwischenablage kopiert</string>
+
+    <!-- Benachrichtigungen & Aufnahme -->
+    <string name="notification_action_stop">Stopp</string>
+    <string name="notification_action_record">Aufnehmen</string>
+    <string name="notification_action_stop_record">Aufnahme beenden</string>
+    <string name="recording_saved_toast">Aufnahme gespeichert in Interner Speicher/Music/%s</string>
+    <string name="recording_in_progress">Audioaufnahme läuft…</string>
+    <string name="recording_title_standalone">Mikrofonaufnahme</string>
+    <string name="recording_desc_standalone">Mikrofon wird in den Ordner /Music/ aufgenommen</string>
+
+    <!-- Berechtigungen -->
+    <string name="permission_mic_required">Mikrofonberechtigung ist erforderlich, um Audio zu streamen oder aufzunehmen.</string>
+    <string name="permission_notif_required">Benachrichtigungsberechtigung ist für die Hintergrundwiedergabe erforderlich.</string>
+    <string name="no_network_error">Keine Netzwerkverbindung.</string>
+    <string name="non_wifi_warning">WARNUNG: Nicht mit WLAN verbunden.</string>
+    <string name="invalid_address_error">Ungültige Adresse</string>
+    <string name="invalid_port_error">Ungültiger Port</string>
+</resources>

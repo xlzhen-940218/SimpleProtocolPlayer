@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">IP 地址 / 主机名</string>
+    <string name="hintIpAddr">IP 地址 / 主机名</string>
+    <string name="labelAudioPort">音频端口</string>
+    <string name="hintAudioPort">音频端口</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">关于与说明</string>
+    <string name="notice_title">说明</string>
+    <string name="labelSampleRate">采样率</string>
+    <string name="labelStereoMono">声道</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (默认)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>单声道</item>
+        <item>立体声 (默认)</item>
+    </string-array>
+    <string name="stereoKey">立体声</string>
+    <string name="bufferSize">缓冲区大小 (毫秒)</string>
+    <string name="bufferSizeHint">缓冲区大小</string>
+    <string name="retry">启用网络断线自动重试</string>
+    <string name="usePerformanceMode">低延迟性能模式</string>
+    <string name="useMinBuffer">最小 AudioTrack 缓冲区</string>
+    <string name="useMedia3">Media3 (实验性)</string>
+    <string name="error">错误</string>
+
+    <!-- 模式选择 -->
+    <string name="mode_speaker">扬声器 (接收端)</string>
+    <string name="mode_mic">麦克风 (发送端)</string>
+    <string name="mode_speaker_desc">安卓端播放 Linux 电脑的声音</string>
+    <string name="mode_mic_desc">将安卓麦克风作为 Linux 电脑的麦克风输入 (Issue #43)</string>
+
+    <!-- 状态 -->
+    <string name="status_ready">就绪</string>
+    <string name="status_connecting">正在连接…</string>
+    <string name="status_streaming_speaker">串流中：正在播放 Linux 音频</string>
+    <string name="status_streaming_mic">串流中：正在发送麦克风至 Linux</string>
+    <string name="status_stopped">串流已停止</string>
+    <string name="status_error">连接失败</string>
+    <string name="status_error_desc">请检查网络连接、Linux 端 IP 地址及端口。</string>
+
+    <!-- 按钮 -->
+    <string name="btn_start_stream">开始串流</string>
+    <string name="btn_stop_stream">停止串流</string>
+    <string name="btn_start_record">开始录音</string>
+    <string name="btn_stop_record">停止录音</string>
+    <string name="recording_active_badge">录音中</string>
+
+    <!-- 分组标题 -->
+    <string name="section_connection">连接设置</string>
+    <string name="section_audio_format">音频格式</string>
+    <string name="section_advanced">高级选项</string>
+
+    <!-- Linux 配置指南 -->
+    <string name="linux_guide_item">Linux 配置指南</string>
+    <string name="linux_guide_title">Linux 配置指南</string>
+    <string name="linux_guide_desc">在 Linux 终端中运行以下命令以配置 PulseAudio 或 PipeWire：</string>
+    <string name="linux_guide_ip_title">1. 查看 Linux IP 地址</string>
+    <string name="linux_guide_speaker_title">2. 扬声器模式 (安卓端播放电脑声音)</string>
+    <string name="linux_guide_mic_title">3. 麦克风模式 (安卓麦克风作为电脑输入)</string>
+    <string name="linux_guide_unload_title">4. 卸载 / 停止音频模块</string>
+    <string name="copied_to_clipboard">命令已复制到剪贴板</string>
+
+    <!-- 通知与录音 -->
+    <string name="notification_action_stop">停止</string>
+    <string name="notification_action_record">开始录音</string>
+    <string name="notification_action_stop_record">停止录音</string>
+    <string name="recording_saved_toast">音频已保存至 内部存储/Music/%s</string>
+    <string name="recording_in_progress">正在录音…</string>
+    <string name="recording_title_standalone">麦克风录音</string>
+    <string name="recording_desc_standalone">正在录制音频至 内部存储/Music/ 目录</string>
+
+    <!-- 权限与验证提示 -->
+    <string name="permission_mic_required">需要麦克风录音权限以进行麦克风串流或实时录音。</string>
+    <string name="permission_notif_required">需要通知权限以保持后台稳定播放与常驻服务控制。</string>
+    <string name="no_network_error">无网络连接。</string>
+    <string name="non_wifi_warning">警告：当前未连接 Wi-Fi 网络。</string>
+    <string name="invalid_address_error">无效的 IP 地址或主机名</string>
+    <string name="invalid_port_error">无效的端口号</string>
+</resources>

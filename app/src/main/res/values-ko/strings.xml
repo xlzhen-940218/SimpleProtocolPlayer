@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">IP 주소 / 호스트 이름</string>
+    <string name="hintIpAddr">IP 주소 / 호스트 이름</string>
+    <string name="labelAudioPort">오디오 포트</string>
+    <string name="hintAudioPort">오디오 포트</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">정보 및 고지</string>
+    <string name="notice_title">고지</string>
+    <string name="labelSampleRate">샘플레이트</string>
+    <string name="labelStereoMono">모노/스테레오</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (기본값)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>모노</item>
+        <item>스테레오 (기본값)</item>
+    </string-array>
+    <string name="stereoKey">스테레오</string>
+    <string name="bufferSize">버퍼 크기 (ms)</string>
+    <string name="bufferSizeHint">버퍼 크기</string>
+    <string name="retry">네트워크 자동 재연결</string>
+    <string name="usePerformanceMode">성능 모드 (저지연)</string>
+    <string name="useMinBuffer">최소 AudioTrack 버퍼</string>
+    <string name="useMedia3">Media3 (실험적)</string>
+    <string name="error">오류</string>
+
+    <!-- 모드 선택 -->
+    <string name="mode_speaker">스피커 (수신 모드)</string>
+    <string name="mode_mic">마이크 (송신 모드)</string>
+    <string name="mode_speaker_desc">Android에서 Linux PC 소리 재생</string>
+    <string name="mode_mic_desc">Android 마이크를 Linux PC 입력으로 전송 (Issue #43)</string>
+
+    <!-- 상태 -->
+    <string name="status_ready">스트리밍 준비 완료</string>
+    <string name="status_connecting">연결 중…</string>
+    <string name="status_streaming_speaker">스트리밍 중: Linux 오디오 재생</string>
+    <string name="status_streaming_mic">스트리밍 중: 마이크 전송 중</string>
+    <string name="status_stopped">스트리밍 중지됨</string>
+    <string name="status_error">연결 실패</string>
+    <string name="status_error_desc">네트워크 상태, Linux 서버 IP 및 포트를 확인하세요.</string>
+
+    <!-- 버튼 -->
+    <string name="btn_start_stream">스트리밍 시작</string>
+    <string name="btn_stop_stream">스트리밍 중지</string>
+    <string name="btn_start_record">녹음 시작</string>
+    <string name="btn_stop_record">녹음 중지</string>
+    <string name="recording_active_badge">녹음 중</string>
+
+    <!-- 섹션 헤더 -->
+    <string name="section_connection">연결 설정</string>
+    <string name="section_audio_format">오디오 포맷</string>
+    <string name="section_advanced">고급 설정</string>
+
+    <!-- Linux 설정 가이드 -->
+    <string name="linux_guide_item">Linux 설정 가이드</string>
+    <string name="linux_guide_title">Linux 설정 가이드</string>
+    <string name="linux_guide_desc">PulseAudio 또는 PipeWire를 설정하려면 Linux 터미널에서 다음 명령을 실행하세요:</string>
+    <string name="linux_guide_ip_title">1. Linux IP 주소 확인</string>
+    <string name="linux_guide_speaker_title">2. 스피커 모드 (PC 소리를 Android로 재생)</string>
+    <string name="linux_guide_mic_title">3. 마이크 모드 (Android 마이크를 PC 입력으로)</string>
+    <string name="linux_guide_unload_title">4. 모듈 언로드 / 중지</string>
+    <string name="copied_to_clipboard">명령어가 클립보드에 복사되었습니다</string>
+
+    <!-- 알림 및 녹음 -->
+    <string name="notification_action_stop">중지</string>
+    <string name="notification_action_record">녹음</string>
+    <string name="notification_action_stop_record">녹음 중지</string>
+    <string name="recording_saved_toast">녹음이 내부 저장소/Music/%s 에 저장되었습니다</string>
+    <string name="recording_in_progress">오디오 녹음 중…</string>
+    <string name="recording_title_standalone">마이크 녹음</string>
+    <string name="recording_desc_standalone">마이크 오디오를 /Music/ 폴더에 녹음 중</string>
+
+    <!-- 권한 -->
+    <string name="permission_mic_required">마이크 스트리밍 또는 녹음을 위해 마이크 권한이 필요합니다.</string>
+    <string name="permission_notif_required">백그라운드 재생 유지를 위해 알림 권한이 필요합니다.</string>
+    <string name="no_network_error">네트워크 연결이 없습니다.</string>
+    <string name="non_wifi_warning">경고: Wi-Fi에 연결되어 있지 않습니다.</string>
+    <string name="invalid_address_error">유효하지 않은 주소</string>
+    <string name="invalid_port_error">유효하지 않은 포트</string>
+</resources>

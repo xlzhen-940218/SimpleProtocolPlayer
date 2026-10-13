@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">Adresse IP / Nom d’hôte</string>
+    <string name="hintIpAddr">Adresse IP / Nom d’hôte</string>
+    <string name="labelAudioPort">Port audio</string>
+    <string name="hintAudioPort">Port audio</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">À propos</string>
+    <string name="notice_title">Notice</string>
+    <string name="labelSampleRate">Fréquence d’échantillonnage</string>
+    <string name="labelStereoMono">Mono/Stéréo</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (Défaut)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>Mono</item>
+        <item>Stéréo (Défaut)</item>
+    </string-array>
+    <string name="stereoKey">Stéréo</string>
+    <string name="bufferSize">Taille du tampon (en ms)</string>
+    <string name="bufferSizeHint">Taille du tampon</string>
+    <string name="retry">Activer la reconnexion automatique</string>
+    <string name="usePerformanceMode">Mode performance (faible latence)</string>
+    <string name="useMinBuffer">Tampon AudioTrack minimal</string>
+    <string name="useMedia3">Media3 (Expérimental)</string>
+    <string name="error">Erreur</string>
+
+    <!-- Choix du mode -->
+    <string name="mode_speaker">Haut-parleur (Récepteur)</string>
+    <string name="mode_mic">Microphone (Émetteur)</string>
+    <string name="mode_speaker_desc">Lire le son de Linux sur Android</string>
+    <string name="mode_mic_desc">Envoyer le microphone Android vers Linux (Issue #43)</string>
+
+    <!-- Statuts -->
+    <string name="status_ready">Prêt à diffuser</string>
+    <string name="status_connecting">Connexion en cours…</string>
+    <string name="status_streaming_speaker">Diffusion en cours : lecture audio Linux</string>
+    <string name="status_streaming_mic">Diffusion en cours : envoi du micro vers Linux</string>
+    <string name="status_stopped">Diffusion arrêtée</string>
+    <string name="status_error">Échec de la connexion</string>
+    <string name="status_error_desc">Vérifiez le réseau, l’adresse IP du serveur Linux et le port.</string>
+
+    <!-- Boutons -->
+    <string name="btn_start_stream">Démarrer la diffusion</string>
+    <string name="btn_stop_stream">Arrêter la diffusion</string>
+    <string name="btn_start_record">Démarrer l’enregistrement</string>
+    <string name="btn_stop_record">Arrêter l’enregistrement</string>
+    <string name="recording_active_badge">REC</string>
+
+    <!-- En-têtes -->
+    <string name="section_connection">Connexion</string>
+    <string name="section_audio_format">Format audio</string>
+    <string name="section_advanced">Options avancées</string>
+
+    <!-- Guide de configuration Linux -->
+    <string name="linux_guide_item">Guide de configuration Linux</string>
+    <string name="linux_guide_title">Guide de configuration Linux</string>
+    <string name="linux_guide_desc">Exécutez ces commandes dans votre terminal Linux pour configurer PulseAudio ou PipeWire :</string>
+    <string name="linux_guide_ip_title">1. Trouver l’adresse IP Linux</string>
+    <string name="linux_guide_speaker_title">2. Mode haut-parleur (Android lit le son du PC)</string>
+    <string name="linux_guide_mic_title">3. Mode microphone (Micro Android vers PC)</string>
+    <string name="linux_guide_unload_title">4. Décharger / Arrêter le module</string>
+    <string name="copied_to_clipboard">Commande copiée dans le presse-papiers</string>
+
+    <!-- Notifications et enregistrement -->
+    <string name="notification_action_stop">Arrêter</string>
+    <string name="notification_action_record">Enregistrer</string>
+    <string name="notification_action_stop_record">Arrêter l’enreg.</string>
+    <string name="recording_saved_toast">Enregistrement enregistré dans Stockage interne/Music/%s</string>
+    <string name="recording_in_progress">Enregistrement audio en cours…</string>
+    <string name="recording_title_standalone">Enregistrement microphone</string>
+    <string name="recording_desc_standalone">Enregistrement du micro vers /Music/</string>
+
+    <!-- Autorisations -->
+    <string name="permission_mic_required">L’autorisation de microphone est requise pour diffuser ou enregistrer.</string>
+    <string name="permission_notif_required">L’autorisation de notification est requise pour la lecture en arrière-plan.</string>
+    <string name="no_network_error">Aucune connexion réseau.</string>
+    <string name="non_wifi_warning">AVERTISSEMENT : Wi-Fi non connecté.</string>
+    <string name="invalid_address_error">Adresse non valide</string>
+    <string name="invalid_port_error">Port non valide</string>
+</resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">IP アドレス / ホスト名</string>
+    <string name="hintIpAddr">IP アドレス / ホスト名</string>
+    <string name="labelAudioPort">オーディオポート</string>
+    <string name="hintAudioPort">オーディオポート</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">概要と注意事項</string>
+    <string name="notice_title">注意事項</string>
+    <string name="labelSampleRate">サンプリングレート</string>
+    <string name="labelStereoMono">モノラル / ステレオ</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (デフォルト)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>モノラル</item>
+        <item>ステレオ (デフォルト)</item>
+    </string-array>
+    <string name="stereoKey">ステレオ</string>
+    <string name="bufferSize">バッファサイズ (ミリ秒)</string>
+    <string name="bufferSizeHint">バッファサイズ</string>
+    <string name="retry">ネットワーク自動再接続を有効化</string>
+    <string name="usePerformanceMode">低遅延パフォーマンスモード</string>
+    <string name="useMinBuffer">最小 AudioTrack バッファ</string>
+    <string name="useMedia3">Media3 (実験的機能)</string>
+    <string name="error">エラー</string>
+
+    <!-- モード選択 -->
+    <string name="mode_speaker">スピーカー (受信モード)</string>
+    <string name="mode_mic">マイク (送信モード)</string>
+    <string name="mode_speaker_desc">Linux PC の音声を Android で再生</string>
+    <string name="mode_mic_desc">Android のマイク音声を Linux PC に送信 (Issue #43)</string>
+
+    <!-- ステータス -->
+    <string name="status_ready">ストリーミング準備完了</string>
+    <string name="status_connecting">接続中…</string>
+    <string name="status_streaming_speaker">ストリーミング中：Linux 音声を再生中</string>
+    <string name="status_streaming_mic">ストリーミング中：マイク音声を送信中</string>
+    <string name="status_stopped">ストリーミング停止</string>
+    <string name="status_error">接続に失敗しました</string>
+    <string name="status_error_desc">ネットワーク、Linux サーバーの IP アドレスおよびポートを確認してください。</string>
+
+    <!-- ボタン -->
+    <string name="btn_start_stream">ストリーミング開始</string>
+    <string name="btn_stop_stream">ストリーミング停止</string>
+    <string name="btn_start_record">録音開始</string>
+    <string name="btn_stop_record">録音停止</string>
+    <string name="recording_active_badge">録音中</string>
+
+    <!-- ヘッダー -->
+    <string name="section_connection">接続設定</string>
+    <string name="section_audio_format">オーディオ形式</string>
+    <string name="section_advanced">詳細設定</string>
+
+    <!-- Linux ガイド -->
+    <string name="linux_guide_item">Linux 設定ガイド</string>
+    <string name="linux_guide_title">Linux 設定ガイド</string>
+    <string name="linux_guide_desc">PulseAudio または PipeWire を構成するには、Linux 端末で次のコマンドを実行します：</string>
+    <string name="linux_guide_ip_title">1. Linux の IP アドレスを確認</string>
+    <string name="linux_guide_speaker_title">2. スピーカーモード (PC 音声を Android で再生)</string>
+    <string name="linux_guide_mic_title">3. マイクモード (Android マイクを PC 入力として使用)</string>
+    <string name="linux_guide_unload_title">4. モジュールのアンロード / 停止</string>
+    <string name="copied_to_clipboard">コマンドをクリップボードにコピーしました</string>
+
+    <!-- 通知と録音 -->
+    <string name="notification_action_stop">停止</string>
+    <string name="notification_action_record">録音</string>
+    <string name="notification_action_stop_record">録音停止</string>
+    <string name="recording_saved_toast">録音を 内部ストレージ/Music/%s に保存しました</string>
+    <string name="recording_in_progress">音声を録音中…</string>
+    <string name="recording_title_standalone">マイク録音</string>
+    <string name="recording_desc_standalone">マイク音声を /Music/ フォルダに録音中</string>
+
+    <!-- 権限 -->
+    <string name="permission_mic_required">マイクのストリーミングまたは録音にはマイクの権限が必要です。</string>
+    <string name="permission_notif_required">バックグラウンド再生を維持するには通知の権限が必要です。</string>
+    <string name="no_network_error">ネットワーク接続がありません。</string>
+    <string name="non_wifi_warning">警告：Wi-Fi に接続されていません。</string>
+    <string name="invalid_address_error">無効なアドレスです</string>
+    <string name="invalid_port_error">無効なポートです</string>
+</resources>

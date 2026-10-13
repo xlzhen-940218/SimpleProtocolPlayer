@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_title">Simple Protocol Player</string>
+    <string name="labelIpAddr">Dirección IP / Servidor</string>
+    <string name="hintIpAddr">Dirección IP / Servidor</string>
+    <string name="labelAudioPort">Puerto de audio</string>
+    <string name="hintAudioPort">Puerto de audio</string>
+    <string name="defaultAudioPort">12345</string>
+    <string name="notice_item">Acerca de</string>
+    <string name="notice_title">Aviso</string>
+    <string name="labelSampleRate">Frecuencia de muestreo</string>
+    <string name="labelStereoMono">Mono/Estéreo</string>
+    <string-array name="sampleRates">
+        <item>11025</item>
+        <item>12000</item>
+        <item>22050</item>
+        <item>24000</item>
+        <item>44100 (Predeterminado)</item>
+        <item>48000</item>
+    </string-array>
+    <string-array name="stereo">
+        <item>Mono</item>
+        <item>Estéreo (Predeterminado)</item>
+    </string-array>
+    <string name="stereoKey">Estéreo</string>
+    <string name="bufferSize">Tamaño del búfer (en ms)</string>
+    <string name="bufferSizeHint">Tamaño del búfer</string>
+    <string name="retry">Activar reconexión automática</string>
+    <string name="usePerformanceMode">Modo de rendimiento (baja latencia)</string>
+    <string name="useMinBuffer">Búfer mínimo de AudioTrack</string>
+    <string name="useMedia3">Media3 (Experimental)</string>
+    <string name="error">Error</string>
+
+    <!-- Selección de modo -->
+    <string name="mode_speaker">Altavoz (Receptor)</string>
+    <string name="mode_mic">Micrófono (Transmisor)</string>
+    <string name="mode_speaker_desc">Reproducir sonido de Linux en Android</string>
+    <string name="mode_mic_desc">Enviar micrófono de Android a Linux (Issue #43)</string>
+
+    <!-- Estados -->
+    <string name="status_ready">Listo para transmitir</string>
+    <string name="status_connecting">Conectando…</string>
+    <string name="status_streaming_speaker">Transmitiendo: reproduciendo audio de Linux</string>
+    <string name="status_streaming_mic">Transmitiendo: enviando micrófono a Linux</string>
+    <string name="status_stopped">Transmisión detenida</string>
+    <string name="status_error">Error de conexión</string>
+    <string name="status_error_desc">Compruebe la red, la IP del servidor Linux y el puerto.</string>
+
+    <!-- Botones -->
+    <string name="btn_start_stream">Iniciar transmisión</string>
+    <string name="btn_stop_stream">Detener transmisión</string>
+    <string name="btn_start_record">Iniciar grabación</string>
+    <string name="btn_stop_record">Detener grabación</string>
+    <string name="recording_active_badge">REC</string>
+
+    <!-- Secciones -->
+    <string name="section_connection">Conexión</string>
+    <string name="section_audio_format">Formato de audio</string>
+    <string name="section_advanced">Opciones avanzadas</string>
+
+    <!-- Guía de Linux -->
+    <string name="linux_guide_item">Guía de configuración de Linux</string>
+    <string name="linux_guide_title">Guía de configuración de Linux</string>
+    <string name="linux_guide_desc">Ejecute estos comandos en su terminal de Linux para configurar PulseAudio o PipeWire:</string>
+    <string name="linux_guide_ip_title">1. Ver dirección IP de Linux</string>
+    <string name="linux_guide_speaker_title">2. Modo altavoz (Android reproduce sonido del PC)</string>
+    <string name="linux_guide_mic_title">3. Modo micrófono (Micrófono de Android a PC)</string>
+    <string name="linux_guide_unload_title">4. Descargar / Detener módulo</string>
+    <string name="copied_to_clipboard">Comando copiado al portapapeles</string>
+
+    <!-- Notificaciones y grabación -->
+    <string name="notification_action_stop">Detener</string>
+    <string name="notification_action_record">Grabar</string>
+    <string name="notification_action_stop_record">Detener grab.</string>
+    <string name="recording_saved_toast">Grabación guardada en Almacenamiento interno/Music/%s</string>
+    <string name="recording_in_progress">Grabación de audio en curso…</string>
+    <string name="recording_title_standalone">Grabación de micrófono</string>
+    <string name="recording_desc_standalone">Grabando audio de micrófono en /Music/</string>
+
+    <!-- Permisos -->
+    <string name="permission_mic_required">Se requiere permiso de micrófono para transmitir o grabar audio.</string>
+    <string name="permission_notif_required">Se requiere permiso de notificación para la reproducción en segundo plano.</string>
+    <string name="no_network_error">Sin conexión a la red.</string>
+    <string name="non_wifi_warning">ADVERTENCIA: Wi-Fi no conectado.</string>
+    <string name="invalid_address_error">Dirección no válida</string>
+    <string name="invalid_port_error">Puerto no válido</string>
+</resources>
