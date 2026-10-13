@@ -1,58 +1,46 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- * Copyright (C) 2014 kaytat
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.kaytat.simpleprotocolplayer;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import java.util.ArrayList;
 
 /**
- * Service that handles media playback. This is the Service through which we perform all the media
- * handling in our application.
+ * Foreground Service that handles audio streaming (both Speaker receiver mode and Microphone transmitter mode).
+ * Keeps app alive in background, manages wake/wifi locks, and provides notification controls.
  */
 public class MusicService extends Service
     implements MusicFocusable, WorkerThreadPair.StopPlaybackCallback {
 
-  // The tag we put on debug messages
-  static final String TAG = "SimpleProtocol";
+  static final String TAG = "MusicService";
 
-  static final int DEFAULT_AUDIO_PORT = 12345;
-  static final int DEFAULT_SAMPLE_RATE = 44100;
-  static final boolean DEFAULT_STEREO = true;
-  static final int DEFAULT_BUFFER_MS = 50;
-  static final boolean DEFAULT_RETRY = false;
-  static final boolean DEFAULT_USE_PERFORMANCE_MODE = false;
-  static final boolean DEFAULT_USE_MIN_BUFFER = false;
+  public static final int DEFAULT_AUDIO_PORT = 12345;
+  public static final int DEFAULT_SAMPLE_RATE = 44100;
+  public static final boolean DEFAULT_STEREO = true;
+  public static final int DEFAULT_BUFFER_MS = 50;
+  public static final boolean DEFAULT_RETRY = false;
+  public static final boolean DEFAULT_USE_PERFORMANCE_MODE = false;
+  public static final boolean DEFAULT_USE_MIN_BUFFER = false;
 
-  // These are the Intent actions that we are prepared to handle. Notice
-  // that the fact these constants exist in our class is a mere
-  // convenience: what really defines the actions our service can handle
-  // are the <action> tags in the <intent-filters> tag for our service in
-  // AndroidManifest.xml.
   public static final String ACTION_PLAY = "com.kaytat.simpleprotocolplayer.action.PLAY";
   public static final String ACTION_STOP = "com.kaytat.simpleprotocolplayer.action.STOP";
+  public static final String ACTION_STATUS_CHANGED =
+      "com.kaytat.simpleprotocolplayer.action.STATUS_CHANGED";
+
+  public static final String DATA_MODE = "mode";
+  public static final int MODE_SPEAKER = 0;
+  public static final int MODE_MIC = 1;
 
   public static final String DATA_IP_ADDRESS = "ip_addr";
   public static final String DATA_AUDIO_PORT = "audio_port";
@@ -63,130 +51,233 @@ public class MusicService extends Service
   public static final String DATA_USE_PERFORMANCE_MODE = "use_performance_mode";
   public static final String DATA_USE_MIN_BUFFER = "use_min_buffer";
 
-  // The volume we set the media player to when we lose audio focus, but
-  // are allowed to reduce the volume instead of stopping playback.
+  public static final String EXTRA_STATUS = "extra_status";
+  public static final String EXTRA_MODE = "extra_mode";
+  public static final String EXTRA_HOST = "extra_host";
+  public static final String EXTRA_PORT = "extra_port";
+  public static final String EXTRA_MESSAGE = "extra_message";
+
   public static final float DUCK_VOLUME = 0.1f;
 
-  private final ArrayList<WorkerThreadPair> workers = new ArrayList<>();
-
-  // AudioFocusHelper object
-  AudioFocusHelper mAudioFocusHelper = null;
-
-  // indicates the state our service:
-  enum State {
-    Stopped, // media player is stopped and not prepared to play
-    Playing // playback active (media player ready!)
+  public enum StreamingStatus {
+    IDLE,
+    CONNECTING,
+    STREAMING_PLAYER,
+    STREAMING_MIC,
+    ERROR
   }
 
-  State mState = State.Stopped;
+  // Observable static state
+  public static volatile StreamingStatus currentStatus = StreamingStatus.IDLE;
+  public static volatile int currentMode = MODE_SPEAKER;
+  public static volatile String currentHost = "";
+  public static volatile int currentPort = DEFAULT_AUDIO_PORT;
+  public static volatile long streamStartTime = 0;
 
-  // do we have audio focus?
+  private final ArrayList<WorkerThreadPair> workers = new ArrayList<>();
+  private MicWorkerThread micWorker = null;
+
+  AudioFocusHelper mAudioFocusHelper = null;
+
   enum AudioFocus {
-    NoFocusNoDuck, // we don't have audio focus, and can't duck
-    NoFocusCanDuck, // we don't have focus, but can play at a low
-    // volume ("ducking")
-    Focused // we have full audio focus
+    NoFocusNoDuck,
+    NoFocusCanDuck,
+    Focused
   }
 
   AudioFocus mAudioFocus = AudioFocus.NoFocusNoDuck;
-
-  // Wifi lock that we hold when streaming files from the internet, in
-  // order to prevent the device from shutting off the Wifi radio
   WifiLockManager wifiLockManager;
+  private PowerManager.WakeLock wakeLock = null;
 
-  // The ID we use for the notification (the onscreen alert that appears at
-  // the notification area at the top of the screen as an icon -- and as
-  // text as well if the user expands the notification area).
-  final int NOTIFICATION_ID = 1;
-  final String NOTIFICATION_CHANNEL_ID = "SimpleProtocolPlayer";
-
+  final int NOTIFICATION_ID = 1001;
+  final String NOTIFICATION_CHANNEL_ID = "simple_protocol_service_channel";
   Notification mNotification = null;
 
   @Override
   public void onCreate() {
-    Log.i(TAG, "Creating service");
+    super.onCreate();
+    Log.i(TAG, "Creating MusicService");
 
-    // Create the Wifi lock (this does not acquire the lock, this just
-    // creates it)
     wifiLockManager = new WifiLockManager(this);
     wifiLockManager.setEnabled(true);
 
-    mAudioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
-  }
-
-  /**
-   * Called when we receive an Intent. When we receive an intent sent to us via startService(), this
-   * is the method that gets called. So here we react appropriately depending on the Intent's
-   * action, which specifies what is being requested of us.
-   */
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    String action = intent.getAction();
-    if (action != null) {
-      if (action.equals(ACTION_PLAY)) {
-        processPlayRequest(intent);
-      } else if (action.equals(ACTION_STOP)) {
-        processStopRequest();
-      }
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    if (pm != null) {
+      wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SimpleProtocolPlayer:WakeLock");
+      wakeLock.setReferenceCounted(false);
     }
 
-    // Means we started the service, but don't want it to restart in case it's
-    // killed.
+    mAudioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
+    createNotificationChannel();
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    if (intent != null) {
+      String action = intent.getAction();
+      if (action != null) {
+        if (action.equals(ACTION_PLAY)) {
+          processPlayRequest(intent);
+        } else if (action.equals(ACTION_STOP)) {
+          processStopRequest();
+        }
+      }
+    }
     return START_NOT_STICKY;
   }
 
-  void processPlayRequest(Intent i) {
-    if (mState == State.Stopped) {
-      tryToGetAudioFocus();
-    } else {
-      stopWorkers();
+  private void updateStatus(StreamingStatus status, String message) {
+    currentStatus = status;
+    Intent broadcast = new Intent(ACTION_STATUS_CHANGED);
+    broadcast.setPackage(getPackageName());
+    broadcast.putExtra(EXTRA_STATUS, status.name());
+    broadcast.putExtra(EXTRA_MODE, currentMode);
+    broadcast.putExtra(EXTRA_HOST, currentHost);
+    broadcast.putExtra(EXTRA_PORT, currentPort);
+    if (message != null) {
+      broadcast.putExtra(EXTRA_MESSAGE, message);
     }
+    sendBroadcast(broadcast);
+  }
 
-    playStream(
-        i.getStringExtra(DATA_IP_ADDRESS),
-        i.getIntExtra(DATA_AUDIO_PORT, DEFAULT_AUDIO_PORT),
-        i.getIntExtra(DATA_SAMPLE_RATE, DEFAULT_SAMPLE_RATE),
-        i.getBooleanExtra(DATA_STEREO, DEFAULT_STEREO),
-        i.getIntExtra(DATA_BUFFER_MS, DEFAULT_BUFFER_MS),
-        i.getBooleanExtra(DATA_RETRY, DEFAULT_RETRY),
-        i.getBooleanExtra(DATA_USE_PERFORMANCE_MODE, DEFAULT_USE_PERFORMANCE_MODE),
-        i.getBooleanExtra(DATA_USE_MIN_BUFFER, DEFAULT_USE_MIN_BUFFER));
+  void processPlayRequest(Intent i) {
+    currentMode = i.getIntExtra(DATA_MODE, MODE_SPEAKER);
+    currentHost = i.getStringExtra(DATA_IP_ADDRESS);
+    currentPort = i.getIntExtra(DATA_AUDIO_PORT, DEFAULT_AUDIO_PORT);
+    int sampleRate = i.getIntExtra(DATA_SAMPLE_RATE, DEFAULT_SAMPLE_RATE);
+    boolean stereo = i.getBooleanExtra(DATA_STEREO, DEFAULT_STEREO);
+    int bufferMs = i.getIntExtra(DATA_BUFFER_MS, DEFAULT_BUFFER_MS);
+    boolean retry = i.getBooleanExtra(DATA_RETRY, DEFAULT_RETRY);
+    boolean usePerformanceMode = i.getBooleanExtra(DATA_USE_PERFORMANCE_MODE, DEFAULT_USE_PERFORMANCE_MODE);
+    boolean useMinBuffer = i.getBooleanExtra(DATA_USE_MIN_BUFFER, DEFAULT_USE_MIN_BUFFER);
+
+    // Stop existing streaming first to avoid dangling sockets
+    stopActiveWorkers();
+
+    streamStartTime = System.currentTimeMillis();
+
+    if (currentMode == MODE_MIC) {
+      // Microphone mode
+      startMicStream(currentHost, currentPort, sampleRate, stereo, bufferMs, retry);
+    } else {
+      // Speaker mode
+      tryToGetAudioFocus();
+      playStream(currentHost, currentPort, sampleRate, stereo, bufferMs, retry, usePerformanceMode, useMinBuffer);
+    }
+  }
+
+  private void acquireLocks() {
+    wifiLockManager.setStayAwake(true);
+    if (wakeLock != null && !wakeLock.isHeld()) {
+      try {
+        wakeLock.acquire(12 * 60 * 60 * 1000L); // 12 hours max
+      } catch (Exception e) {
+        Log.e(TAG, "Error acquiring wake lock: " + e);
+      }
+    }
+  }
+
+  private void releaseLocks() {
+    wifiLockManager.setStayAwake(false);
+    if (wakeLock != null && wakeLock.isHeld()) {
+      try {
+        wakeLock.release();
+      } catch (Exception e) {
+        Log.e(TAG, "Error releasing wake lock: " + e);
+      }
+    }
+  }
+
+  private void playStream(
+      String serverAddr,
+      int serverPort,
+      int sample_rate,
+      boolean stereo,
+      int buffer_ms,
+      boolean retry,
+      boolean usePerformanceMode,
+      boolean useMinBuffer) {
+
+    workers.add(
+        new WorkerThreadPair(
+            this,
+            this,
+            serverAddr,
+            serverPort,
+            sample_rate,
+            stereo,
+            buffer_ms,
+            retry,
+            usePerformanceMode,
+            useMinBuffer));
+
+    acquireLocks();
+    configVolume();
+
+    String title = "PulseAudio Speaker";
+    String content = "Receiving from " + serverAddr + ":" + serverPort;
+    setUpAsForeground(title, content, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+    updateStatus(StreamingStatus.STREAMING_PLAYER, "Connected to " + serverAddr);
+  }
+
+  private void startMicStream(
+      String serverAddr,
+      int serverPort,
+      int sampleRate,
+      boolean stereo,
+      int bufferMs,
+      boolean retry) {
+
+    micWorker =
+        new MicWorkerThread(
+            this,
+            this,
+            serverAddr,
+            serverPort,
+            sampleRate,
+            stereo,
+            bufferMs,
+            retry);
+    micWorker.start();
+
+    acquireLocks();
+
+    String title = "PulseAudio Microphone";
+    String content = "Streaming mic to " + serverAddr + ":" + serverPort;
+    int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+        ? ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+        : ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
+    setUpAsForeground(title, content, type);
+    updateStatus(StreamingStatus.STREAMING_MIC, "Sending mic to " + serverAddr);
   }
 
   void processStopRequest() {
-    if (mState == State.Playing) {
-      mState = State.Stopped;
-
-      // let go of all resources...
-      relaxResources();
-      giveUpAudioFocus();
-
-      // service is no longer necessary. Will be started again if needed.
-      stopSelf();
-    }
+    relaxResources();
+    giveUpAudioFocus();
+    updateStatus(StreamingStatus.IDLE, "Stopped");
+    stopSelf();
   }
 
-  /**
-   * Releases resources used by the service for playback. This includes the "foreground service"
-   * status and notification, the wake locks and the AudioTrack
-   */
   void relaxResources() {
-    // stop being a foreground service
-    stopForeground(true);
-
-    // we can also release the Wifi lock, if we're holding it
-    wifiLockManager.setStayAwake(false);
-
-    // Wait for worker thread to stop if running
-    stopWorkers();
+    try {
+      stopForeground(STOP_FOREGROUND_REMOVE);
+    } catch (Exception e) {
+      Log.e(TAG, "stopForeground error: " + e);
+    }
+    releaseLocks();
+    stopActiveWorkers();
   }
 
-  void stopWorkers() {
+  void stopActiveWorkers() {
     for (WorkerThreadPair worker : workers) {
       worker.stopAndInterrupt();
     }
-
     workers.clear();
+
+    if (micWorker != null) {
+      micWorker.customStop();
+      micWorker = null;
+    }
   }
 
   void tryToGetAudioFocus() {
@@ -205,131 +296,104 @@ public class MusicService extends Service
     }
   }
 
-  /** Reconfigures AudioTrack according to audio focus settings and starts/restarts it. */
   void configVolume() {
     if (mAudioFocus == AudioFocus.NoFocusNoDuck) {
-      // If we don't have audio focus and can't duck, we have to pause,
-      // even if mState is State.Playing. But we stay in the Playing
-      // state so that we know we have to resume playback once we get
-      // the focus back.
-      if (mState == State.Playing) {
+      if (currentStatus == StreamingStatus.STREAMING_PLAYER) {
         processStopRequest();
       }
-
       return;
     }
 
     for (WorkerThreadPair it : workers) {
-      if (mAudioFocus == AudioFocus.NoFocusCanDuck) {
-        it.audioTrack.setVolume(DUCK_VOLUME); // we'll be
-        // relatively
-        // quiet
-      } else {
-        it.audioTrack.setVolume(1.0f); // we can be loud
+      if (it.audioTrack != null) {
+        if (mAudioFocus == AudioFocus.NoFocusCanDuck) {
+          it.audioTrack.setVolume(DUCK_VOLUME);
+        } else {
+          it.audioTrack.setVolume(1.0f);
+        }
       }
     }
   }
 
-  /** Play the stream using the given IP address and port */
-  void playStream(
-      String serverAddr,
-      int serverPort,
-      int sample_rate,
-      boolean stereo,
-      int buffer_ms,
-      boolean retry,
-      boolean usePerformanceMode,
-      boolean useMinBuffer) {
-
-    mState = State.Stopped;
-    relaxResources();
-
-    workers.add(
-        new WorkerThreadPair(
-            this,
-            this,
-            serverAddr,
-            serverPort,
-            sample_rate,
-            stereo,
-            buffer_ms,
-            retry,
-            usePerformanceMode,
-            useMinBuffer));
-
-    wifiLockManager.setStayAwake(true);
-
-    mState = State.Playing;
-    configVolume();
-
-    setUpAsForeground("Streaming from " + serverAddr);
-  }
-
-  /**
-   * Configures service as a foreground service. A foreground service is a service that's doing
-   * something the user is actively aware of (such as playing music), and must appear to the user as
-   * a notification. That's why we create the notification here.
-   */
-  void setUpAsForeground(String text) {
-    createNotificationChannel();
-
-    PendingIntent pi =
+  @SuppressLint("InlinedApi")
+  void setUpAsForeground(String title, String content, int foregroundServiceType) {
+    PendingIntent contentIntent =
         PendingIntent.getActivity(
             getApplicationContext(),
             0,
             new Intent(getApplicationContext(), MainActivity.class),
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
+    Intent stopIntent = new Intent(this, MusicService.class);
+    stopIntent.setAction(ACTION_STOP);
+    PendingIntent stopPendingIntent =
+        PendingIntent.getService(
+            this,
+            1,
+            stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+    NotificationCompat.Action stopAction =
+        new NotificationCompat.Action.Builder(
+                R.drawable.ic_stop,
+                getString(R.string.notification_action_stop),
+                stopPendingIntent)
+            .build();
+
     mNotification =
         new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_playing)
             .setOngoing(true)
-            .setContentTitle(NOTIFICATION_CHANNEL_ID)
-            .setContentText(text)
-            .setContentIntent(pi)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setContentIntent(contentIntent)
+            .addAction(stopAction)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build();
-    startForeground(NOTIFICATION_ID, mNotification);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      startForeground(NOTIFICATION_ID, mNotification, foregroundServiceType);
+    } else {
+      startForeground(NOTIFICATION_ID, mNotification);
+    }
   }
 
   private void createNotificationChannel() {
-    int importance = NotificationManager.IMPORTANCE_DEFAULT;
     NotificationChannel channel =
-        new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_ID, importance);
+        new NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            "Simple Protocol Audio Service",
+            NotificationManager.IMPORTANCE_LOW);
+    channel.setDescription("Background audio streaming for Simple Protocol Player");
     channel.setSound(null, null);
-    // Register the channel with the system; you can't change the
-    // importance or other notification behaviors after this
+    channel.enableVibration(false);
     NotificationManager notificationManager = getSystemService(NotificationManager.class);
-    notificationManager.createNotificationChannel(channel);
+    if (notificationManager != null) {
+      notificationManager.createNotificationChannel(channel);
+    }
   }
 
   @Override
   public void onGainedAudioFocus() {
-    Log.i(TAG, "Gained audio focus");
     mAudioFocus = AudioFocus.Focused;
-
-    // restart media player with new focus settings
-    if (mState == State.Playing) {
+    if (currentStatus == StreamingStatus.STREAMING_PLAYER) {
       configVolume();
     }
   }
 
   @Override
   public void onLostAudioFocus(boolean canDuck) {
-    Log.i(TAG, "Lost audio focus: canDuck:" + canDuck);
     mAudioFocus = canDuck ? AudioFocus.NoFocusCanDuck : AudioFocus.NoFocusNoDuck;
-
-    // start/restart/pause media player with new focus settings
-    if (mState == State.Playing) {
+    if (currentStatus == StreamingStatus.STREAMING_PLAYER) {
       configVolume();
     }
   }
 
   @Override
   public void onDestroy() {
-    // Service is being killed, so make sure we release our resources
-    mState = State.Stopped;
-    relaxResources();
-    giveUpAudioFocus();
+    processStopRequest();
+    super.onDestroy();
   }
 
   @Override
@@ -337,6 +401,7 @@ public class MusicService extends Service
     return null;
   }
 
+  @Override
   public void stopPlayback() {
     processStopRequest();
   }

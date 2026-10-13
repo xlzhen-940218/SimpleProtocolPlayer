@@ -17,15 +17,15 @@
      See corresponding Java code com.android.sdk.content.StyledText -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:fitsSystemWindows="true"
-  android:orientation="vertical">
-
-  <TextView
-    android:id="@+id/notice_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="vertical"
-    android:textStyle="normal" />
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/notice_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:textStyle="normal" />
 </ScrollView>

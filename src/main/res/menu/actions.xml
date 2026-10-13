@@ -1,5 +1,12 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:id="@+id/linux_guide_item"
+    android:title="@string/linux_guide_item"
+    android:icon="@drawable/ic_help"
+    app:showAsAction="ifRoom" />
   <item
     android:id="@+id/notice_item"
-    android:title="@string/notice_item" />
+    android:title="@string/notice_item"
+    app:showAsAction="never" />
 </menu>

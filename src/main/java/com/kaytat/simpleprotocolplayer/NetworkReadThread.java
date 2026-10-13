@@ -40,6 +40,7 @@ class NetworkReadThread extends ThreadStoppable {
 
   // socket timeout at 5 seconds
   static final int SOCKET_TIMEOUT = 5 * 1000;
+  private volatile Socket socket = null;
 
   public NetworkReadThread(WorkerThreadPair syncObject, String ipAddr, int port,
       boolean attemptConnectionRetry, String debugTag) {
@@ -59,6 +60,26 @@ class NetworkReadThread extends ThreadStoppable {
     dataBuffer = new byte[numBuffers][];
     for (int i = 0; i < numBuffers; i++) {
       dataBuffer[i] = new byte[syncObject.bytesPerAudioPacket];
+    }
+  }
+
+  @Override
+  public void customStop() {
+    super.customStop();
+    closeSocket();
+  }
+
+  private synchronized void closeSocket() {
+    if (socket != null) {
+      try {
+        if (!socket.isClosed()) {
+          socket.close();
+        }
+      } catch (IOException iex) {
+        Log.i(TAG, "exception while closing socket:" + iex);
+      } finally {
+        socket = null;
+      }
     }
   }
 
@@ -117,7 +138,6 @@ class NetworkReadThread extends ThreadStoppable {
   }
 
   public boolean runImpl() {
-    Socket socket = null;
     boolean connectionMade = false;
 
     try {
@@ -149,15 +169,8 @@ class NetworkReadThread extends ThreadStoppable {
       }
     } catch (Exception e) {
       Log.i(TAG, "runImpl:exception:" + e);
-
-      // Attempt to release resources
-      if (socket != null) {
-        try {
-          socket.close();
-        } catch (IOException iex) {
-          Log.i(TAG, "exception while closing socket:" + iex);
-        }
-      }
+    } finally {
+      closeSocket();
     }
 
     return connectionMade;

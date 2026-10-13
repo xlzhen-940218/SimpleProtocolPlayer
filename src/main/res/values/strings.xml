@@ -45,6 +45,32 @@
   <string name="retry">Enable network retries</string>
   <string name="usePerformanceMode">Performance mode</string>
   <string name="useMinBuffer">Min AudioTrack buffer</string>
-  <string name="useMedia3">Media3</string>
+  <string name="useMedia3">Media3 (Experimental)</string>
   <string name="error">Error</string>
+
+  <!-- Mode selection -->
+  <string name="mode_speaker">Speaker (Receiver)</string>
+  <string name="mode_mic">Microphone (Transmitter)</string>
+  <string name="mode_speaker_desc">Play Linux audio on Android</string>
+  <string name="mode_mic_desc">Send Android mic audio to Linux (Issue #43)</string>
+
+  <!-- Statuses -->
+  <string name="status_ready">Ready to stream</string>
+  <string name="status_connecting">Connecting…</string>
+  <string name="status_streaming_speaker">Streaming: Playing Linux audio</string>
+  <string name="status_streaming_mic">Streaming: Sending mic to Linux</string>
+  <string name="status_stopped">Streaming stopped</string>
+
+  <!-- Buttons -->
+  <string name="btn_start_stream">Start Streaming</string>
+  <string name="btn_stop_stream">Stop Streaming</string>
+
+  <!-- Headers -->
+  <string name="section_connection">Connection</string>
+  <string name="section_audio_format">Audio Format</string>
+  <string name="section_advanced">Advanced Options</string>
+  <string name="linux_guide_item">Linux Setup Guide</string>
+  <string name="notification_action_stop">Stop</string>
+  <string name="permission_mic_required">Microphone permission is required to stream mic audio.</string>
+  <string name="permission_notif_required">Notification permission is required for background playback.</string>
 </resources>

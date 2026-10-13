@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand colors -->
+    <color name="primary">#1E88E5</color>
+    <color name="primary_variant">#1565C0</color>
+    <color name="primary_container">#E3F2FD</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary_container">#0D47A1</color>
+
+    <color name="secondary">#26A69A</color>
+    <color name="secondary_variant">#00897B</color>
+    <color name="secondary_container">#E0F2F1</color>
+    <color name="on_secondary">#FFFFFF</color>
+
+    <color name="status_idle">#9E9E9E</color>
+    <color name="status_connecting">#FF9800</color>
+    <color name="status_streaming">#4CAF50</color>
+    <color name="status_error">#F44336</color>
+
+    <color name="card_stroke">#1F000000</color>
+</resources>
